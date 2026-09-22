@@ -1,2 +1,31 @@
-.venv
-/bin
+.venv/
+/bin/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+downloads/
+output/
+media/
+cache/
+
+# Local env files
+.env
+.env.*
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# OS files
+desktop.ini
+
+# Node (only used by the jsdom-based frontend test)
+node_modules/
+package-lock.json

@@ -1,0 +1,25 @@
+﻿{
+    "name":  "downloader",
+    "version":  "1.0.0",
+    "description":  "Frontend test harness for the video downloader UI",
+    "main":  "index.js",
+    "scripts":  {
+                    "test":  "node test_persist.js"
+                },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/yaswantpandey/yt-insta-video-downloader.git"
+                   },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "bugs":  {
+                 "url":  "https://github.com/yaswantpandey/yt-insta-video-downloader/issues"
+             },
+    "homepage":  "https://github.com/yaswantpandey/yt-insta-video-downloader#readme",
+    "dependencies":  {
+                         "jsdom":  "^29.1.1"
+                     }
+}

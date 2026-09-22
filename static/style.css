@@ -164,6 +164,19 @@ select {
 
 select:focus { border-color: var(--accent); }
 
+.actions { display: flex; gap: 10px; align-items: stretch; }
+.actions #download { flex: 1; }
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 11px 16px;
+  font-weight: 500;
+}
+
+.ghost:hover:not(:disabled) { color: var(--text); border-color: #3a4351; }
+
 .hint { margin: 12px 0 0; font-size: 0.8rem; color: var(--muted); }
 
 .progress { margin-top: 14px; }

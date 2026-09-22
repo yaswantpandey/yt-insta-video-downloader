@@ -10,6 +10,7 @@ const uploaderEl = document.getElementById("uploader");
 const durationEl = document.getElementById("duration");
 const quality = document.getElementById("quality");
 const downloadBtn = document.getElementById("download");
+const clearBtn = document.getElementById("clear");
 const progress = document.getElementById("progress");
 const fill = document.getElementById("fill");
 const pstate = document.getElementById("pstate");
@@ -17,6 +18,53 @@ const pstats = document.getElementById("pstats");
 
 let current = null;
 let polling = null;
+let restoring = false;
+
+// The fetched video is kept in localStorage so a page reload doesn't throw
+// away the result and force the link to be pasted again.
+const STORE_KEY = "downloader:last";
+const STORE_TTL = 12 * 60 * 60 * 1000; // stream URLs go stale; 12h is plenty
+
+function saveState(data, selected) {
+  try {
+    localStorage.setItem(
+      STORE_KEY,
+      JSON.stringify({ v: 1, at: Date.now(), data, selected })
+    );
+  } catch (err) {
+    /* private mode or quota - persistence is a nicety, never fatal */
+  }
+}
+
+function loadState() {
+  let raw;
+  try {
+    raw = localStorage.getItem(STORE_KEY);
+  } catch (err) {
+    return null;
+  }
+  if (!raw) return null;
+  try {
+    const saved = JSON.parse(raw);
+    if (saved.v !== 1 || !saved.data) return null;
+    if (Date.now() - saved.at > STORE_TTL) {
+      clearState();
+      return null;
+    }
+    return saved;
+  } catch (err) {
+    clearState();
+    return null;
+  }
+}
+
+function clearState() {
+  try {
+    localStorage.removeItem(STORE_KEY);
+  } catch (err) {
+    /* ignore */
+  }
+}
 
 function setStatus(message, kind) {
   if (!message) {
@@ -83,13 +131,51 @@ function render(data) {
   }
 
   result.hidden = false;
+  // Don't re-save while restoring, or the 12h expiry would reset on every
+  // page load and the entry would never age out.
+  if (!restoring) saveState(data, quality.value);
 }
+
+// Remember the chosen quality too, so a reload keeps the same selection.
+quality.addEventListener("change", () => {
+  if (current) saveState(current, quality.value);
+});
+
+clearBtn.addEventListener("click", () => {
+  if (polling) return; // don't discard a running download
+  clearState();
+  current = null;
+  result.hidden = true;
+  urlInput.value = "";
+  setStatus(null);
+  urlInput.focus();
+});
+
+// Restore the last fetched video on page load.
+(function restore() {
+  const saved = loadState();
+  if (!saved) return;
+  restoring = true;
+  try {
+    render(saved.data);
+    urlInput.value = saved.data.url || "";
+    if (saved.selected) {
+      const match = Array.from(quality.options).find(
+        (o) => o.value === saved.selected
+      );
+      if (match) quality.value = saved.selected;
+    }
+  } finally {
+    restoring = false;
+  }
+})();
 
 downloadBtn.addEventListener("click", async () => {
   if (!current || polling) return;
 
   downloadBtn.disabled = true;
   downloadBtn.textContent = "Downloading…";
+  clearBtn.disabled = true;
   setStatus(null);
   showProgress(null, "Starting…", "");
 
@@ -173,6 +259,7 @@ function finishDownload() {
   fill.style.width = "0";
   downloadBtn.disabled = false;
   downloadBtn.textContent = "Download";
+  clearBtn.disabled = false;
 }
 
 function bytes(n) {
