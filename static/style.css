@@ -1,0 +1,222 @@
+:root {
+  --bg: #0e1116;
+  --panel: #171c24;
+  --panel-2: #1e242e;
+  --line: #2a323d;
+  --text: #e6eaf0;
+  --muted: #8b95a5;
+  --accent: #5b7cfa;
+  --accent-2: #7a5bfa;
+  --danger: #ff6b6b;
+  --ok: #43d17c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 15% -10%, #1d2740 0%, transparent 60%),
+    radial-gradient(800px 500px at 95% 0%, #2a1d40 0%, transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font: 16px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 760px;
+  padding: 56px 20px 40px;
+}
+
+header { text-align: center; margin-bottom: 28px; }
+
+h1 {
+  margin: 0;
+  font-size: 2.1rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sub { margin: 6px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+form {
+  display: flex;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+#url {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: var(--text);
+  font-size: 1rem;
+  padding: 10px 8px;
+}
+
+#url::placeholder { color: #616b7c; }
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 22px;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+button:hover:not(:disabled) { opacity: 0.9; }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { opacity: 0.55; cursor: progress; }
+
+.status {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.93rem;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+}
+
+.status.err { border-color: #4a2630; color: var(--danger); }
+.status.ok { border-color: #22492f; color: var(--ok); }
+
+.card {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.media { position: relative; }
+
+.media img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 11px;
+  background: var(--panel-2);
+  display: block;
+}
+
+.badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.meta { display: flex; flex-direction: column; min-width: 0; }
+
+.meta h2 {
+  margin: 0 0 6px;
+  font-size: 1.12rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.byline { margin: 0 0 16px; color: var(--muted); font-size: 0.88rem; }
+.dur::before { content: " \00b7 "; }
+
+label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+select {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 11px 12px;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+select:focus { border-color: var(--accent); }
+
+.hint { margin: 12px 0 0; font-size: 0.8rem; color: var(--muted); }
+
+.progress { margin-top: 14px; }
+
+.bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  width: 0;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.25s ease;
+}
+
+/* Indeterminate: used while merging, when there is no percentage to show. */
+.fill.pulse {
+  width: 100% !important;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.pline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 0;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+#pstats { font-variant-numeric: tabular-nums; }
+
+footer {
+  margin-top: 36px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b7482;
+  line-height: 1.6;
+}
+
+@media (max-width: 620px) {
+  .wrap { padding-top: 34px; }
+  form { flex-direction: column; }
+  .card { grid-template-columns: 1fr; }
+  .media img { aspect-ratio: 16 / 9; }
+}

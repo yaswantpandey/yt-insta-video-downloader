@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reel &amp; Video Downloader</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Video Downloader</h1>
+    <p class="sub">Instagram Reels &middot; YouTube videos &middot; YouTube Shorts</p>
+  </header>
+
+  <form id="form" autocomplete="off">
+    <input id="url" type="text" inputmode="url" spellcheck="false"
+           placeholder="Paste a link, e.g. https://www.instagram.com/reel/..." required>
+    <button id="go" type="submit">Fetch</button>
+  </form>
+
+  <p id="status" class="status" hidden></p>
+
+  <section id="result" class="card" hidden>
+    <div class="media">
+      <img id="thumb" alt="">
+      <span id="badge" class="badge"></span>
+    </div>
+    <div class="meta">
+      <h2 id="title"></h2>
+      <p class="byline"><span id="uploader"></span><span id="duration" class="dur"></span></p>
+      <label for="quality">Quality</label>
+      <select id="quality"></select>
+      <button id="download" type="button">Download</button>
+
+      <div id="progress" class="progress" hidden>
+        <div class="bar"><div id="fill" class="fill"></div></div>
+        <p class="pline"><span id="pstate">Starting…</span><span id="pstats"></span></p>
+      </div>
+      {% if not has_ffmpeg %}
+      <p class="hint">ffmpeg isn't installed, so only qualities that already
+        include audio are listed. Install ffmpeg to unlock 1080p and above.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <footer>
+    Download only content you own or have permission to use. Saving media from
+    these platforms may violate their terms of service.
+  </footer>
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
