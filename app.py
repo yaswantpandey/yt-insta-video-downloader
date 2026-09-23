@@ -1,4 +1,4 @@
-"""Video downloader web app for YouTube videos/Shorts and Instagram Reels."""
+﻿"""Video downloader web app for YouTube videos/Shorts and Instagram Reels."""
 
 import os
 import re
@@ -9,11 +9,122 @@ import time
 import uuid
 from urllib.parse import urlparse
 
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, Response, jsonify, render_template, request, send_file, url_for
 from yt_dlp import YoutubeDL
 from yt_dlp.utils import DownloadError
 
 app = Flask(__name__)
+
+# ---------------------------------------------------------------------------
+# SEO / site identity
+# ---------------------------------------------------------------------------
+# Canonical origin used for canonical tags, Open Graph URLs and the sitemap.
+# Set SITE_URL in production, e.g. SITE_URL=https://reelgrab.example
+SITE_URL = (os.environ.get("SITE_URL") or "http://localhost:5000").rstrip("/")
+SITE_NAME = os.environ.get("SITE_NAME") or "ReelGrab"
+SITE_TAGLINE = "Free Instagram Reels & YouTube Video Downloader"
+SITE_DESCRIPTION = (
+    "Download Instagram Reels, YouTube videos and YouTube Shorts in HD. "
+    "Paste a link, pick a quality, and save the file â€” no signup, no watermark, "
+    "no software to install."
+)
+SITE_KEYWORDS = ", ".join(
+    [
+        # Primary intent
+        "instagram reels downloader",
+        "youtube video downloader",
+        "youtube shorts downloader",
+        "reels downloader",
+        "video downloader",
+        "online video downloader",
+        # Action / long-tail
+        "download instagram reels",
+        "download instagram video",
+        "save instagram reel",
+        "download youtube video",
+        "download youtube shorts",
+        "how to download instagram reels",
+        "reel download link",
+        "paste link download video",
+        # Format / quality modifiers
+        "hd video downloader",
+        "1080p video downloader",
+        "4k video downloader",
+        "mp4 downloader",
+        "instagram reel to mp4",
+        "youtube to mp4",
+        # Qualifier modifiers â€” what people actually search for
+        "free video downloader",
+        "reels downloader without watermark",
+        "no watermark reel download",
+        "video downloader no signup",
+        "video downloader without app",
+        "fast video downloader",
+        # Device / platform modifiers
+        "instagram downloader for iphone",
+        "reels downloader for android",
+        "video downloader online browser",
+        "instagram video downloader pc",
+    ]
+)
+SITE_LOCALE = "en_US"
+SITE_LANG = "en"
+# Optional social handle for Twitter/X card attribution, e.g. "@reelgrab".
+TWITTER_HANDLE = (os.environ.get("TWITTER_HANDLE") or "").strip()
+# Search-console ownership tokens. Left blank, the meta tags are simply omitted.
+GOOGLE_SITE_VERIFICATION = (os.environ.get("GOOGLE_SITE_VERIFICATION") or "").strip()
+BING_SITE_VERIFICATION = (os.environ.get("BING_SITE_VERIFICATION") or "").strip()
+# Brand colours reused by the theme meta tags and the web app manifest.
+THEME_COLOR = "#0f1115"
+BACKGROUND_COLOR = "#0e1116"
+# Fixed at process start so og:updated_time reflects the deploy, not each request.
+BUILD_TIME = time.strftime("%Y-%m-%dT%H:%M:%S+00:00", time.gmtime())
+
+# Rendered as visible <details> on the page *and* as FAQPage structured data.
+# Keeping one source of truth means the markup can never drift from the schema,
+# which is what Google penalises.
+FAQS = [
+    (
+        "Is this Instagram Reels downloader free?",
+        "Yes. Every download is free and unlimited, with no account, no signup "
+        "and no watermark added to your video.",
+    ),
+    (
+        "Which sites are supported?",
+        "Instagram Reels and posts, YouTube videos, and YouTube Shorts. Paste "
+        "any youtube.com, youtu.be or instagram.com link.",
+    ),
+    (
+        "Can I download 1080p or 4K video?",
+        "Yes, when ffmpeg is installed on the server. High-resolution YouTube "
+        "streams ship video and audio separately, and ffmpeg merges them back "
+        "into a single MP4. Without ffmpeg only pre-merged qualities are "
+        "offered, which usually caps out at 720p.",
+    ),
+    (
+        "Does it work on iPhone and Android?",
+        "Yes. It runs in the browser, so it works on iOS, Android, Windows and "
+        "macOS without installing an app.",
+    ),
+    (
+        "Do you store the videos I download?",
+        "No. Files are written to a temporary folder, streamed to your browser "
+        "and then deleted. Nothing is kept after the download finishes.",
+    ),
+    (
+        "Why did my Instagram link fail?",
+        "Instagram returns empty responses to anonymous requests for most "
+        "posts. Supplying cookies â€” either a cookies.txt file via "
+        "DOWNLOADER_COOKIES or a browser profile via DOWNLOADER_BROWSER â€” "
+        "resolves it. Private accounts you do not follow can never be fetched.",
+    ),
+    (
+        "Is downloading these videos legal?",
+        "Download only content you own or have permission to use. Saving media "
+        "from these platforms may breach their terms of service, and "
+        "redistributing someone else's video can infringe copyright.",
+    ),
+]
 
 # Only these hosts may be fetched. Prevents the download endpoint from being
 # used as an open proxy / SSRF vector against arbitrary URLs.
@@ -298,7 +409,7 @@ def friendly_error(exc):
     if "unavailable" in lowered or "does not exist" in lowered:
         return "That video is unavailable or the link is wrong."
     if "age" in lowered and "confirm" in lowered:
-        return "Age-restricted video — a cookies.txt file is required."
+        return "Age-restricted video â€” a cookies.txt file is required."
     # Strip yt-dlp's ANSI/prefix noise for display.
     text = re.sub(r"^ERROR:\s*", "", text).strip()
     return text[:300] or "Could not read that link."
@@ -306,7 +417,90 @@ def friendly_error(exc):
 
 @app.route("/")
 def index():
-    return render_template("index.html", has_ffmpeg=HAS_FFMPEG)
+    return render_template(
+        "index.html",
+        has_ffmpeg=HAS_FFMPEG,
+        faqs=FAQS,
+        canonical=f"{SITE_URL}/",
+        site_url=SITE_URL,
+        site_name=SITE_NAME,
+        tagline=SITE_TAGLINE,
+        description=SITE_DESCRIPTION,
+        keywords=SITE_KEYWORDS,
+        locale=SITE_LOCALE,
+        lang=SITE_LANG,
+        twitter_handle=TWITTER_HANDLE,
+        theme_color=THEME_COLOR,
+        og_image=f"{SITE_URL}{url_for('static', filename='og.png')}",
+        updated_time=BUILD_TIME,
+        google_verification=GOOGLE_SITE_VERIFICATION,
+        bing_verification=BING_SITE_VERIFICATION,
+    )
+
+
+@app.route("/manifest.webmanifest")
+def manifest():
+    """PWA manifest â€” makes the site installable and is read by mobile crawlers."""
+    return jsonify(
+        {
+            "name": f"{SITE_NAME} â€” {SITE_TAGLINE}",
+            "short_name": SITE_NAME,
+            "description": SITE_DESCRIPTION,
+            "lang": SITE_LANG,
+            "start_url": "/",
+            "scope": "/",
+            "display": "standalone",
+            "orientation": "portrait-primary",
+            "theme_color": THEME_COLOR,
+            "background_color": BACKGROUND_COLOR,
+            "categories": ["utilities", "productivity", "multimedia"],
+            "icons": [
+                {
+                    "src": "/static/favicon.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable",
+                },
+                {"src": "/static/og.png", "sizes": "1200x630", "type": "image/png"},
+            ],
+        }
+    )
+
+
+def _render_seo_file(filename):
+    """Read seo/<filename> and fill in the {{SITE_URL}} / {{LASTMOD}} slots.
+
+    Keeping robots.txt and sitemap.xml as real, editable files on disk means
+    they can be diffed and hand-tuned, while the placeholders keep every URL
+    absolute and correct for whatever domain SITE_URL points at. They live
+    outside static/ so the unsubstituted source is never itself crawlable.
+    """
+    path = os.path.join(BASE_DIR, "seo", filename)
+    with open(path, encoding="utf-8") as fh:
+        body = fh.read()
+    return body.replace("{{SITE_URL}}", SITE_URL).replace(
+        "{{LASTMOD}}", time.strftime("%Y-%m-%d", time.gmtime())
+    )
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    """Serve seo/robots.txt from the site root, where crawlers expect it."""
+    return Response(_render_seo_file("robots.txt"), mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    """Serve seo/sitemap.xml from the site root, where crawlers expect it."""
+    return Response(_render_seo_file("sitemap.xml"), mimetype="application/xml")
+
+
+@app.after_request
+def add_seo_headers(response):
+    """Keep API responses and file downloads out of search results."""
+    if request.path.startswith("/api/"):
+        response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    return response
 
 
 @app.route("/api/info", methods=["POST"])
@@ -601,4 +795,6 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", "5000"))
     print(f"Serving on port {port}")
+
+
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)

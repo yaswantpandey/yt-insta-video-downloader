@@ -22,7 +22,7 @@ cache/
 # IDE/editor files
 .vscode/
 .idea/
-
+.cortex/
 # OS files
 desktop.ini
 

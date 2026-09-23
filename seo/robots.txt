@@ -1,0 +1,71 @@
+# robots.txt — {{SITE_URL}}
+# {{SITE_URL}} is replaced at request time with the SITE_URL env value.
+
+# ---------------------------------------------------------------------------
+# All crawlers
+# ---------------------------------------------------------------------------
+User-agent: *
+Allow: /
+Allow: /static/
+Disallow: /api/
+
+# ---------------------------------------------------------------------------
+# Major search engines — explicit, no crawl-delay so they index at full speed
+# ---------------------------------------------------------------------------
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Googlebot-Image
+Allow: /static/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+
+# ---------------------------------------------------------------------------
+# Social unfurlers — must reach the page to read Open Graph tags
+# ---------------------------------------------------------------------------
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+# ---------------------------------------------------------------------------
+# Aggressive SEO scrapers — throttled, they add load but no search traffic
+# ---------------------------------------------------------------------------
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+# ---------------------------------------------------------------------------
+Sitemap: {{SITE_URL}}/sitemap.xml

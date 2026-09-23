@@ -1,29 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reel &amp; Video Downloader</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- ---------- Core SEO ---------- -->
+<title>{{ tagline }} — {{ site_name }}</title>
+<meta name="description" content="{{ description }}">
+<meta name="keywords" content="{{ keywords }}">
+<meta name="subject" content="Online video and Instagram Reels downloader">
+<meta name="abstract" content="{{ description }}">
+<meta name="author" content="{{ site_name }}">
+<meta name="publisher" content="{{ site_name }}">
+<meta name="copyright" content="{{ site_name }}">
+<meta name="language" content="{{ lang }}">
+<meta name="rating" content="general">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="{{ canonical }}">
+<link rel="alternate" href="{{ canonical }}" hreflang="{{ lang }}">
+<link rel="alternate" href="{{ canonical }}" hreflang="x-default">
+
+<!-- ---------- Crawler directives ---------- -->
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="bingbot" content="index, follow">
+{%- if google_verification %}
+<meta name="google-site-verification" content="{{ google_verification }}">
+{%- endif %}
+{%- if bing_verification %}
+<meta name="msvalidate.01" content="{{ bing_verification }}">
+{%- endif %}
+
+<!-- ---------- Mobile / PWA ---------- -->
+<meta name="theme-color" content="{{ theme_color }}">
+<meta name="color-scheme" content="dark light">
+<meta name="application-name" content="{{ site_name }}">
+<meta name="apple-mobile-web-app-title" content="{{ site_name }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="msapplication-TileColor" content="{{ theme_color }}">
+<meta name="msapplication-tooltip" content="{{ tagline }}">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="{{ url_for('manifest') }}">
+
+<!-- ---------- Open Graph (Facebook, LinkedIn, WhatsApp, Telegram, Discord) ---------- -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site_name }}">
+<meta property="og:locale" content="{{ locale }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:title" content="{{ tagline }} — {{ site_name }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:image" content="{{ og_image }}">
+{%- if og_image.startswith('https://') %}
+<meta property="og:image:secure_url" content="{{ og_image }}">
+{%- endif %}
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ site_name }} — paste a link, download the video">
+<meta property="og:updated_time" content="{{ updated_time }}">
+
+<!-- ---------- Twitter / X ---------- -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ tagline }} — {{ site_name }}">
+<meta name="twitter:description" content="{{ description }}">
+<meta name="twitter:image" content="{{ og_image }}">
+<meta name="twitter:image:alt" content="{{ site_name }} — paste a link, download the video">
+<meta name="twitter:label1" content="Price">
+<meta name="twitter:data1" content="Free">
+<meta name="twitter:label2" content="Supports">
+<meta name="twitter:data2" content="Instagram Reels, YouTube, Shorts">
+{%- if twitter_handle %}
+<meta name="twitter:site" content="{{ twitter_handle }}">
+<meta name="twitter:creator" content="{{ twitter_handle }}">
+{%- endif %}
+
+<!-- ---------- Icons & resource hints ---------- -->
+<link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='og.png') }}">
+<link rel="mask-icon" href="{{ url_for('static', filename='favicon.svg') }}" color="{{ theme_color }}">
+<link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+<link rel="dns-prefetch" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://scontent.cdninstagram.com" crossorigin>
+<link rel="dns-prefetch" href="https://scontent.cdninstagram.com">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url_for('sitemap_xml') }}">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ site_url }}/#website",
+      "url": "{{ site_url }}/",
+      "name": {{ site_name | tojson }},
+      "description": {{ description | tojson }},
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "{{ site_url }}/#app",
+      "name": {{ (site_name ~ ' — ' ~ tagline) | tojson }},
+      "url": "{{ site_url }}/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "description": {{ description | tojson }},
+      "isPartOf": { "@id": "{{ site_url }}/#website" },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Download Instagram Reels",
+        "Download YouTube videos",
+        "Download YouTube Shorts",
+        "Choose video quality up to 4K",
+        "No watermark, no signup"
+      ]
+    },
+    {
+      "@type": "HowTo",
+      "@id": "{{ site_url }}/#howto",
+      "name": "How to download an Instagram Reel or YouTube video",
+      "totalTime": "PT1M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Copy the link",
+          "text": "Open the Reel, Short or video and copy its share link."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Paste and fetch",
+          "text": "Paste the link into the box above and press Fetch to load the available qualities."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Pick a quality and download",
+          "text": "Choose a resolution and press Download to save the MP4 to your device."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "{{ site_url }}/#faq",
+      "mainEntity": [
+        {%- for question, answer in faqs %}
+        {
+          "@type": "Question",
+          "name": {{ question | tojson }},
+          "acceptedAnswer": { "@type": "Answer", "text": {{ answer | tojson }} }
+        }{{ "," if not loop.last }}
+        {%- endfor %}
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <main class="wrap">
   <header>
-    <h1>Video Downloader</h1>
-    <p class="sub">Instagram Reels &middot; YouTube videos &middot; YouTube Shorts</p>
+    <h1>Instagram Reels &amp; YouTube Video Downloader</h1>
+    <p class="sub">Paste a link to save Instagram Reels, YouTube videos and
+      YouTube Shorts in HD — free, no signup, no watermark.</p>
   </header>
 
-  <form id="form" autocomplete="off">
-    <input id="url" type="text" inputmode="url" spellcheck="false"
+  <form id="form" autocomplete="off" aria-label="Video link">
+    <label class="sr-only" for="url">Video or Reel link</label>
+    <input id="url" name="url" type="text" inputmode="url" spellcheck="false"
            placeholder="Paste a link, e.g. https://www.instagram.com/reel/..." required>
     <button id="go" type="submit">Fetch</button>
   </form>
 
   <p id="status" class="status" hidden></p>
 
-  <section id="result" class="card" hidden>
+  <section id="result" class="card" hidden aria-live="polite">
     <div class="media">
-      <img id="thumb" alt="">
+      <img id="thumb" alt="Video thumbnail" width="480" height="270" loading="lazy" decoding="async">
       <span id="badge" class="badge"></span>
     </div>
     <div class="meta">
@@ -47,11 +210,59 @@
     </div>
   </section>
 
+  <!-- Crawlable copy: search engines need real text on the page, not just a form. -->
+  <section class="prose" id="about">
+    <h2>Free online video downloader — no app, no signup</h2>
+    <p>{{ site_name }} is a free online video downloader for Instagram Reels,
+      YouTube videos and YouTube Shorts. Paste the share link, choose a
+      resolution from 360p up to 4K, and the MP4 downloads straight to your
+      device — no watermark is added, no account is needed, and there is
+      nothing to install.</p>
+    <p>It runs entirely in your browser, so the same page works as an Instagram
+      Reels downloader on iPhone, an MP4 downloader on Android, and a YouTube to
+      MP4 converter on Windows, macOS or Linux.</p>
+  </section>
+
+  <section class="prose" id="how-it-works">
+    <h2>How to download a Reel, Short or video</h2>
+    <ol>
+      <li><strong>Copy the link.</strong> Open the Instagram Reel, YouTube Short
+        or YouTube video and tap Share → Copy link.</li>
+      <li><strong>Paste it above and press Fetch.</strong> The title, thumbnail
+        and every available quality are loaded.</li>
+      <li><strong>Pick a quality and press Download.</strong> The MP4 is saved
+        straight to your phone or computer.</li>
+    </ol>
+  </section>
+
+  <section class="prose" id="supported">
+    <h2>Supported platforms</h2>
+    <ul class="pills">
+      <li>Instagram Reels</li>
+      <li>Instagram posts</li>
+      <li>YouTube videos</li>
+      <li>YouTube Shorts</li>
+      <li>YouTube Music</li>
+    </ul>
+    <p>Works on iPhone, Android, Windows and macOS — it runs entirely in your
+      browser, so there is nothing to install.</p>
+  </section>
+
+  <section class="prose" id="faq">
+    <h2>Frequently asked questions</h2>
+    {% for question, answer in faqs %}
+    <details>
+      <summary><h3>{{ question }}</h3></summary>
+      <p>{{ answer }}</p>
+    </details>
+    {% endfor %}
+  </section>
+
   <footer>
     Download only content you own or have permission to use. Saving media from
     these platforms may violate their terms of service.
   </footer>
 </main>
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  sitemap.xml — {{SITE_URL}}
+  {{SITE_URL}} is replaced at request time with the SITE_URL env value, and
+  {{LASTMOD}} with today's date, so the file never goes stale.
+
+  The site is a single page; the #fragment entries below are NOT separate URLs
+  and are deliberately left out of <url> blocks — only real, crawlable URLs
+  belong in a sitemap.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <url>
+    <loc>{{SITE_URL}}/</loc>
+    <lastmod>{{LASTMOD}}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="{{SITE_URL}}/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{SITE_URL}}/"/>
+    <image:image>
+      <image:loc>{{SITE_URL}}/static/og.png</image:loc>
+      <image:title>Instagram Reels &amp; YouTube Video Downloader</image:title>
+      <image:caption>Paste a link, pick a quality, and save the MP4 — free, no signup, no watermark.</image:caption>
+    </image:image>
+  </url>
+
+</urlset>
