@@ -3,3 +3,4 @@ yt-dlp>=2025.1.1
 # Ships a prebuilt ffmpeg binary. Required: YouTube no longer serves pre-muxed
 # video+audio streams, so merging is needed for any video download.
 imageio-ffmpeg>=0.5
+gunicorn>=23.0

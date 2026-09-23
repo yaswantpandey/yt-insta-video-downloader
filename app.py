@@ -599,5 +599,6 @@ if __name__ == "__main__":
         print(f"[ok] cleaned {orphans} leftover temp folder(s) from earlier runs")
     threading.Thread(target=_reaper_loop, daemon=True).start()
 
-    print("Serving on http://127.0.0.1:5000")
-    app.run(host="127.0.0.1", port=5000, debug=False, threaded=True)
+    port = int(os.environ.get("PORT", "5000"))
+    print(f"Serving on port {port}")
+    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
