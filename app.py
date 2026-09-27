@@ -22,11 +22,10 @@ app = Flask(__name__)
 # Set SITE_URL in production, e.g. SITE_URL=https://reelgrab.example
 SITE_URL = (os.environ.get("SITE_URL") or "http://localhost:5000").rstrip("/")
 SITE_NAME = os.environ.get("SITE_NAME") or "ReelGrab"
-SITE_TAGLINE = "Free Instagram Reels & YouTube Video Downloader"
+SITE_TAGLINE = "Instagram Video Downloader | YouTube Video Downloader"
 SITE_DESCRIPTION = (
-    "Download Instagram Reels, YouTube videos and YouTube Shorts in HD. "
-    "Paste a link, pick a quality, and save the file â€” no signup, no watermark, "
-    "no software to install."
+    "Download Instagram videos, Reels, YouTube videos and Shorts online. "
+    "Choose MP4 quality in your browser with no signup or software."
 )
 SITE_KEYWORDS = ", ".join(
     [
@@ -85,7 +84,7 @@ BUILD_TIME = time.strftime("%Y-%m-%dT%H:%M:%S+00:00", time.gmtime())
 # which is what Google penalises.
 FAQS = [
     (
-        "Is this Instagram Reels downloader free?",
+        "Is this Instagram video downloader free?",
         "Yes. Every download is free and unlimited, with no account, no signup "
         "and no watermark added to your video.",
     ),

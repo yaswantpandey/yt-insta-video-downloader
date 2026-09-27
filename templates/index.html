@@ -7,7 +7,7 @@
 <meta name="google-site-verification" content="0Ws4ZWJ7Yk9DrQGTrHd086W9xrc5e0kK3l98M1riXBw" />
 
 <!-- ---------- Core SEO ---------- -->
-<title>{{ tagline }} — {{ site_name }}</title>
+<title>{{ tagline }}</title>
 <meta name="description" content="{{ description }}">
 <meta name="keywords" content="{{ keywords }}">
 <meta name="subject" content="Online video and Instagram Reels downloader">
@@ -51,7 +51,7 @@
 <meta property="og:site_name" content="{{ site_name }}">
 <meta property="og:locale" content="{{ locale }}">
 <meta property="og:url" content="{{ canonical }}">
-<meta property="og:title" content="{{ tagline }} — {{ site_name }}">
+<meta property="og:title" content="{{ tagline }}">
 <meta property="og:description" content="{{ description }}">
 <meta property="og:image" content="{{ og_image }}">
 {%- if og_image.startswith('https://') %}
@@ -65,7 +65,7 @@
 
 <!-- ---------- Twitter / X ---------- -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ tagline }} — {{ site_name }}">
+<meta name="twitter:title" content="{{ tagline }}">
 <meta name="twitter:description" content="{{ description }}">
 <meta name="twitter:image" content="{{ og_image }}">
 <meta name="twitter:image:alt" content="{{ site_name }} — paste a link, download the video">
@@ -171,9 +171,9 @@
 <body>
 <main class="wrap">
   <header>
-    <h1>Instagram Reels &amp; YouTube Video Downloader</h1>
-    <p class="sub">Paste a link to save Instagram Reels, YouTube videos and
-      YouTube Shorts in HD — free, no signup, no watermark.</p>
+    <h1>Instagram Video Downloader and YouTube Video Downloader</h1>
+    <p class="sub">Paste a link to download Instagram Reels, Instagram posts,
+      YouTube videos and YouTube Shorts in your browser.</p>
   </header>
 
   <form id="form" autocomplete="off" aria-label="Video link">
@@ -213,19 +213,34 @@
 
   <!-- Crawlable copy: search engines need real text on the page, not just a form. -->
   <section class="prose" id="about">
-    <h2>Free online video downloader — no app, no signup</h2>
-    <p>{{ site_name }} is a free online video downloader for Instagram Reels,
-      YouTube videos and YouTube Shorts. Paste the share link, choose a
-      resolution from 360p up to 4K, and the MP4 downloads straight to your
-      device — no watermark is added, no account is needed, and there is
-      nothing to install.</p>
-    <p>It runs entirely in your browser, so the same page works as an Instagram
-      Reels downloader on iPhone, an MP4 downloader on Android, and a YouTube to
-      MP4 converter on Windows, macOS or Linux.</p>
+    <h2>Free online video downloader for Instagram and YouTube</h2>
+    <p>{{ site_name }} is a free <strong>Instagram video downloader</strong>
+      and <strong>YouTube video downloader</strong> for Reels, posts, videos and
+      Shorts. Paste a share link, choose an available quality, and download the
+      MP4 to your device without creating an account or installing software.</p>
+    <p>Use the <a href="#instagram">Instagram downloader</a> for public Reels
+      and posts, or jump to the <a href="#youtube">YouTube downloader</a> for
+      videos and Shorts. The browser-based tool works on iPhone, Android,
+      Windows and macOS.</p>
+  </section>
+
+  <section class="prose" id="instagram">
+    <h2>Instagram video downloader for Reels and posts</h2>
+    <p>Copy an Instagram Reel or post link, paste it above, and fetch the
+      available video quality. Downloads are delivered as MP4 files when the
+      media is accessible to the downloader. Private posts and links requiring
+      an authenticated session may not be available.</p>
+  </section>
+
+  <section class="prose" id="youtube">
+    <h2>YouTube video downloader for videos and Shorts</h2>
+    <p>Use this online YouTube video downloader for standard videos and Shorts.
+      It can offer multiple resolutions when available, including higher
+      qualities when the server can merge separate video and audio streams.</p>
   </section>
 
   <section class="prose" id="how-it-works">
-    <h2>How to download a Reel, Short or video</h2>
+    <h2>How to download an Instagram Reel or YouTube video</h2>
     <ol>
       <li><strong>Copy the link.</strong> Open the Instagram Reel, YouTube Short
         or YouTube video and tap Share → Copy link.</li>
@@ -237,7 +252,7 @@
   </section>
 
   <section class="prose" id="supported">
-    <h2>Supported platforms</h2>
+    <h2>Supported platforms and devices</h2>
     <ul class="pills">
       <li>Instagram Reels</li>
       <li>Instagram posts</li>
@@ -245,8 +260,10 @@
       <li>YouTube Shorts</li>
       <li>YouTube Music</li>
     </ul>
-    <p>Works on iPhone, Android, Windows and macOS — it runs entirely in your
-      browser, so there is nothing to install.</p>
+    <p>Works on iPhone, Android, Windows and macOS in a browser. See the official
+      <a href="https://help.instagram.com/" rel="external">Instagram Help Center</a>
+      and <a href="https://support.google.com/youtube/" rel="external">YouTube Help</a>
+      pages for platform account and content policies.</p>
   </section>
 
   <section class="prose" id="faq">
